@@ -125,7 +125,7 @@ open class FolioReaderWebView: UIWebView {
 
     func remove(_ sender: UIMenuController?) {
         if let removedId = js("removeThisHighlight()") {
-            Highlight.removeById(withConfiguration: self.readerConfig, highlightId: removedId)
+            //Highlight.removeById(withConfiguration: self.readerConfig, highlightId: removedId)
         }
         setMenuVisible(false)
     }
@@ -159,7 +159,7 @@ open class FolioReaderWebView: UIWebView {
             let pageNumber = folioReader.readerCenter?.currentPageNumber ?? 0
             let match = Highlight.MatchingHighlight(text: html, id: identifier, startOffset: startOffset, endOffset: endOffset, bookId: bookId, currentPage: pageNumber)
             let highlight = Highlight.matchHighlight(match)
-            highlight?.persist(withConfiguration: self.readerConfig)
+            //highlight?.persist(withConfiguration: self.readerConfig)
 
         } catch {
             print("Could not receive JSON")
@@ -195,8 +195,8 @@ open class FolioReaderWebView: UIWebView {
     
     @objc func updateHighlightNote (_ sender: UIMenuController?) {
         if let highlightId = js("getHighlightId()") {
-            let highlightNote = Highlight.getById(withConfiguration: readerConfig, highlightId: highlightId)
-            self.folioReader.readerCenter?.presentAddHighlightNote(highlightNote, edit: true)
+            //let highlightNote = Highlight.getById(withConfiguration: readerConfig, highlightId: highlightId)
+            //self.folioReader.readerCenter?.presentAddHighlightNote(highlightNote, edit: true)
         }
     }
 
@@ -244,7 +244,7 @@ open class FolioReaderWebView: UIWebView {
         self.folioReader.currentHighlightStyle = style.rawValue
 
         if let updateId = js("setHighlightStyle('\(HighlightStyle.classForStyle(style.rawValue))')") {
-            Highlight.updateById(withConfiguration: self.readerConfig, highlightId: updateId, type: style)
+            //Highlight.updateById(withConfiguration: self.readerConfig, highlightId: updateId, type: style)
         }
         
         //FIX: https://github.com/FolioReader/FolioReaderKit/issues/316

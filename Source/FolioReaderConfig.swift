@@ -8,7 +8,7 @@
 
 import UIKit
 
-import RealmSwift
+//import RealmSwift
 
 // MARK: - FolioReaderScrollDirection
 
@@ -160,11 +160,6 @@ open class FolioReaderConfig: NSObject {
 
     /// Enable or disable default Quote Image backgrounds
     open var quotePreserveDefaultBackgrounds    = true
-
-    // MARK: Realm
-
-    /// Realm configuration for storing highlights
-    open var realmConfiguration         = Realm.Configuration(schemaVersion: 2)
 
     // MARK: Localized strings
 

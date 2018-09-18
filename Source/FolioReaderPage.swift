@@ -158,7 +158,7 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
             return tempHtmlContent as String
         }
 
-        let highlights = Highlight.allByBookId(withConfiguration: self.readerConfig, bookId: bookId, andPage: pageNumber as NSNumber?)
+        let highlights: [Highlight] = [] //Highlight.allByBookId(withConfiguration: self.readerConfig, bookId: bookId, andPage: pageNumber as NSNumber?)
 
         if (highlights.count > 0) {
             for item in highlights {
