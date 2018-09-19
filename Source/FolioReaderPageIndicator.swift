@@ -45,7 +45,7 @@ class FolioReaderPageIndicator: UIView {
         minutesLabel.font = UIFont(name: "Avenir-Light", size: 10)!
         minutesLabel.textAlignment = NSTextAlignment.right
         //        minutesLabel.alpha = 0
-        addSubview(minutesLabel)
+        //addSubview(minutesLabel)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -57,8 +57,8 @@ class FolioReaderPageIndicator: UIView {
         pagesLabel.sizeToFit()
 
         let fullW = pagesLabel.frame.width + minutesLabel.frame.width
-        minutesLabel.frame.origin = CGPoint(x: frame.width/2-fullW/2, y: 2)
-        pagesLabel.frame.origin = CGPoint(x: minutesLabel.frame.origin.x+minutesLabel.frame.width, y: 2)
+        //minutesLabel.frame.origin = CGPoint(x: frame.width/2-fullW/2, y: 2)
+        pagesLabel.center = CGPoint(x: frame.width / 2, y: pagesLabel.frame.size.height / 2 + 2)
         
         if updateShadow {
             layer.shadowPath = UIBezierPath(rect: bounds).cgPath
@@ -89,12 +89,8 @@ class FolioReaderPageIndicator: UIView {
     fileprivate func reloadViewWithPage(_ page: Int) {
         let pagesRemaining = self.folioReader.needsRTLChange ? totalPages-(totalPages-page+1) : totalPages-page
 
-        if pagesRemaining == 1 {
-            pagesLabel.text = " " + self.readerConfig.localizedReaderOnePageLeft
-        } else {
-            pagesLabel.text = " \(pagesRemaining) " + self.readerConfig.localizedReaderManyPagesLeft
-        }
-
+        pagesLabel.text = "\(totalPages! - pagesRemaining) / \(totalPages!)"
+        
         let minutesRemaining = Int(ceil(CGFloat((pagesRemaining * totalMinutes)/totalPages)))
         if minutesRemaining > 1 {
             minutesLabel.text = "\(minutesRemaining) " + self.readerConfig.localizedReaderManyMinutes+" ·"

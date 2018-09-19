@@ -90,6 +90,8 @@ public enum MediaOverlayStyle: Int {
     /// Called when reader did closed.
     @available(*, deprecated, message: "Use 'folioReaderDidClose(_ folioReader: FolioReader)' instead.")
     @objc optional func folioReaderDidClosed()
+    
+    @objc optional func folioReaderDidUpdateReadLocation(location: [String: Any])
 }
 
 /// Main Library class with some useful constants and methods
@@ -145,6 +147,8 @@ open class FolioReader: NSObject {
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillTerminate, object: nil)
     }
+    
+    open var savedPositionForCurrentBook: [String: Any]? = nil
 }
 
 // MARK: - Present FolioReader
@@ -290,20 +294,6 @@ extension FolioReader {
         }
     }
 
-    open var savedPositionForCurrentBook: [String: Any]? {
-        get {
-            guard let bookId = self.readerContainer?.book.name else {
-                return nil
-            }
-            return self.defaults.value(forKey: bookId) as? [String : Any]
-        }
-        set {
-            guard let bookId = self.readerContainer?.book.name else {
-                return
-            }
-            self.defaults.set(newValue, forKey: bookId)
-        }
-    }
 }
 
 // MARK: - Metadata
@@ -348,8 +338,9 @@ extension FolioReader {
             "pageOffsetX": webView.scrollView.contentOffset.x,
             "pageOffsetY": webView.scrollView.contentOffset.y
             ] as [String : Any]
-
+        
         self.savedPositionForCurrentBook = position
+        delegate?.folioReaderDidUpdateReadLocation?(location: position)
     }
 
     /// Closes and save the reader current instance.
