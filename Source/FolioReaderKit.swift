@@ -91,7 +91,7 @@ public enum MediaOverlayStyle: Int {
     @available(*, deprecated, message: "Use 'folioReaderDidClose(_ folioReader: FolioReader)' instead.")
     @objc optional func folioReaderDidClosed()
     
-    @objc optional func folioReaderDidUpdateReadLocation(location: [String: Any])
+    @objc optional func folioReaderDidUpdateReadPercantage(percent: Double)
 }
 
 /// Main Library class with some useful constants and methods
@@ -339,8 +339,23 @@ extension FolioReader {
             "pageOffsetY": webView.scrollView.contentOffset.y
             ] as [String : Any]
         
+        let totalSize = webView.scrollView.contentSize
+        let offset = webView.scrollView.contentOffset
+        let pageSize = webView.scrollView.bounds.size
+        
+        let x = self.readerCenter!.readerContainer!.readerConfig
+            .isDirection(totalSize.height, totalSize.width, totalSize.height)
+        
+        let y = self.readerCenter!.readerContainer!.readerConfig
+            .isDirection(offset.y, offset.x, offset.x)
+        
+        let z = self.readerCenter!.readerContainer!.readerConfig
+            .isDirection(pageSize.height, pageSize.width, pageSize.width)
+        
+        let percent = Double( (y + z) / x )
+        
         self.savedPositionForCurrentBook = position
-        delegate?.folioReaderDidUpdateReadLocation?(location: position)
+        delegate?.folioReaderDidUpdateReadPercantage?(percent: percent)
     }
 
     /// Closes and save the reader current instance.
