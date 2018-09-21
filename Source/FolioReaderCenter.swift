@@ -94,6 +94,10 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         return readerContainer.folioReader
     }
 
+    deinit {
+        pageIndicatorView?.prepareToDie()
+    }
+    
     // MARK: - Init
 
     init(withContainer readerContainer: FolioReaderContainer) {

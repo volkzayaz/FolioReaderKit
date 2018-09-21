@@ -102,6 +102,11 @@ class FolioReaderPageIndicator: UIView {
         
         reloadView(updateShadow: false)
     }
+    
+    func prepareToDie() {
+        
+        layer.removeAnimation(forKey: "shadowColor")
+    }
 }
 
 extension FolioReaderPageIndicator: CAAnimationDelegate {
