@@ -306,7 +306,8 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         self.setCollectionViewProgressiveDirection()
 
         if self.readerConfig.loadSavedPositionForCurrentBook {
-            guard let position = folioReader.savedPositionForCurrentBook, let pageNumber = position["pageNumber"] as? Int, pageNumber > 0 else {
+            let position = folioReader.savedPositionForCurrentBook
+            guard let pageNumber = position["pageNumber"] as? Int, pageNumber > 0 else {
                 self.currentPageNumber = 1
                 return
             }
@@ -1414,9 +1415,26 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
 extension FolioReaderCenter: FolioReaderPageDelegate {
 
     public func pageDidLoad(_ page: FolioReaderPage) {
-        if self.readerConfig.loadSavedPositionForCurrentBook, let position = folioReader.savedPositionForCurrentBook {
+        let position = folioReader.savedPositionForCurrentBook
+        if self.readerConfig.loadSavedPositionForCurrentBook {
             let pageNumber = position["pageNumber"] as? Int
-            let offset = self.readerConfig.isDirection(position["pageOffsetY"], position["pageOffsetX"], position["pageOffsetY"]) as? CGFloat
+            
+            let totalSize = page.webView!.scrollView.contentSize
+            let percent = (position["percent"] as? CGFloat) ?? 0
+            let pageSize = page.webView!.scrollView.bounds.size
+            
+            ///TODO: horizontalOffset must be precisely calculated to show full and not trimmed page 
+            
+            let x = readerContainer!.readerConfig
+                .isDirection(totalSize.height, totalSize.width, totalSize.height)
+            
+            let p = percent
+            
+            let z = readerContainer!.readerConfig
+                .isDirection(pageSize.height, pageSize.width, pageSize.width)
+            
+            var offset: CGFloat = p * x - z
+            if offset < 0 { offset = 0 }
             let pageOffset = offset
 
             if isFirstLoad {
@@ -1424,7 +1442,7 @@ extension FolioReaderCenter: FolioReaderPageDelegate {
                 isFirstLoad = false
 
                 if (self.currentPageNumber == pageNumber && pageOffset > 0) {
-                    page.scrollPageToOffset(pageOffset!, animated: false)
+                    page.scrollPageToOffset(pageOffset, animated: false)
                 }
             } else if (self.isScrolling == false && folioReader.needsRTLChange == true) {
                 page.scrollPageToBottom()

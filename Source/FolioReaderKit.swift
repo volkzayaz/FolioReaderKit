@@ -91,7 +91,7 @@ public enum MediaOverlayStyle: Int {
     @available(*, deprecated, message: "Use 'folioReaderDidClose(_ folioReader: FolioReader)' instead.")
     @objc optional func folioReaderDidClosed()
     
-    @objc optional func folioReaderDidUpdateReadPercantage(percent: Double)
+    @objc optional func folioReaderDidUpdateReadPercantage(percent: Double, lastPageOpened: Bool)
 }
 
 /// Main Library class with some useful constants and methods
@@ -129,6 +129,8 @@ open class FolioReader: NSObject {
     func isNight<T>(_ f: T, _ l: T) -> T {
         return (self.nightMode == true ? f : l)
     }
+    
+    open var savedPositionForCurrentBook: [String: Any] = [:]
 
     /// UserDefault for the current ePub file.
     fileprivate var defaults: FolioReaderUserDefaults {
@@ -147,8 +149,6 @@ open class FolioReader: NSObject {
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillTerminate, object: nil)
     }
-    
-    open var savedPositionForCurrentBook: [String: Any]? = nil
 }
 
 // MARK: - Present FolioReader
@@ -333,12 +333,6 @@ extension FolioReader {
             return
         }
 
-        let position = [
-            "pageNumber": (self.readerCenter?.currentPageNumber ?? 0),
-            "pageOffsetX": webView.scrollView.contentOffset.x,
-            "pageOffsetY": webView.scrollView.contentOffset.y
-            ] as [String : Any]
-        
         let totalSize = webView.scrollView.contentSize
         let offset = webView.scrollView.contentOffset
         let pageSize = webView.scrollView.bounds.size
@@ -354,8 +348,17 @@ extension FolioReader {
         
         let percent = Double( (y + z) / x )
         
+        let position = [
+            "pageNumber": (self.readerCenter?.currentPageNumber ?? 0),
+            "percent"   : CGFloat(percent)
+            ] as [String : Any]
+        
         self.savedPositionForCurrentBook = position
-        delegate?.folioReaderDidUpdateReadPercantage?(percent: percent)
+        
+        let t1 = self.readerCenter!.pageIndicatorView!.totalPages
+        let t2 = self.readerCenter!.pageIndicatorView!.currentPage
+        
+        delegate?.folioReaderDidUpdateReadPercantage?(percent: percent, lastPageOpened: t1 == t2)
     }
 
     /// Closes and save the reader current instance.

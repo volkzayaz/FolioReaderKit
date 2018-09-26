@@ -84,13 +84,13 @@ class FREpubParser: NSObject, SSZipArchiveDelegate {
 
         var isDir: ObjCBool = false
         let fileManager = FileManager.default
-        let bookName = withEpubPath.lastPathComponent
+        let bookName = withEpubPath.lastPathComponent.deletingPathExtension.appendingPathExtension("epub")
         var bookBasePath = ""
 
         if let path = unzipPath, fileManager.fileExists(atPath: path) {
             bookBasePath = path
         } else {
-            bookBasePath = kApplicationDocumentsDirectory
+            bookBasePath = withEpubPath.deletingLastPathComponent
         }
 
         bookBasePath = bookBasePath.appendingPathComponent(bookName)
