@@ -1423,8 +1423,6 @@ extension FolioReaderCenter: FolioReaderPageDelegate {
             let percent = (position["percent"] as? CGFloat) ?? 0
             let pageSize = page.webView!.scrollView.bounds.size
             
-            ///TODO: horizontalOffset must be precisely calculated to show full and not trimmed page 
-            
             let x = readerContainer!.readerConfig
                 .isDirection(totalSize.height, totalSize.width, totalSize.height)
             
@@ -1435,8 +1433,12 @@ extension FolioReaderCenter: FolioReaderPageDelegate {
             
             var offset: CGFloat = p * x - z
             if offset < 0 { offset = 0 }
-            let pageOffset = offset
-
+            
+            let horizontalCorrection: CGFloat = floor(offset / z) * z
+            
+            let pageOffset = readerContainer!.readerConfig
+                .isDirection(offset, horizontalCorrection, horizontalCorrection)
+            
             if isFirstLoad {
                 updateCurrentPage(page)
                 isFirstLoad = false
