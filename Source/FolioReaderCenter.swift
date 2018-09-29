@@ -255,20 +255,23 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
 
     func configureNavBar() {
         let navBackground = folioReader.isNight(self.readerConfig.nightModeMenuBackground, UIColor.white)
-        let tintColor = readerConfig.tintColor
+        let tintColor = folioReader.isNight(readerConfig.nightTintColor, readerConfig.whiteTintColor)
         let navText = folioReader.isNight(UIColor.white, UIColor.black)
         let font = UIFont(name: "Avenir-Light", size: 17)!
         setTranslucentNavigation(color: navBackground, tintColor: tintColor, titleColor: navText, andFont: font)
+        configureNavBarButtons()
     }
 
     func configureNavBarButtons() {
 
+        let color = folioReader.isNight(readerConfig.nightTintColor, readerConfig.whiteTintColor)
+        
         // Navbar buttons
-        let shareIcon = UIImage(readerImageNamed: "icon-navbar-share")?.ignoreSystemTint(withConfiguration: self.readerConfig)
-        let audioIcon = UIImage(readerImageNamed: "icon-navbar-tts")?.ignoreSystemTint(withConfiguration: self.readerConfig) //man-speech-icon
-        let closeIcon = UIImage(readerImageNamed: "icon-navbar-close")?.ignoreSystemTint(withConfiguration: self.readerConfig)
-        let tocIcon = UIImage(readerImageNamed: "icon-navbar-toc")?.ignoreSystemTint(withConfiguration: self.readerConfig)
-        let fontIcon = UIImage(readerImageNamed: "icon-navbar-font")?.ignoreSystemTint(withConfiguration: self.readerConfig)
+        let shareIcon = UIImage(readerImageNamed: "icon-navbar-share")?.ignoreSystemTint(withColor: color)
+        let audioIcon = UIImage(readerImageNamed: "icon-navbar-tts")?.ignoreSystemTint(withColor: color) //man-speech-icon
+        let closeIcon = UIImage(readerImageNamed: "icon-navbar-close")?.ignoreSystemTint(withColor: color)
+        let tocIcon = UIImage(readerImageNamed: "icon-navbar-toc")?.ignoreSystemTint(withColor: color)
+        let fontIcon = UIImage(readerImageNamed: "icon-navbar-font")?.ignoreSystemTint(withColor: color)
         let space = 70 as CGFloat
 
         let menu = UIBarButtonItem(image: closeIcon, style: .plain, target: self, action:#selector(closeReader(_:)))
@@ -470,7 +473,9 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
             return cell
         }
 
-        let mediaOverlayStyleColors = "\"\(self.readerConfig.mediaOverlayColor.hexString(false))\", \"\(self.readerConfig.mediaOverlayColor.highlightColor().hexString(false))\""
+        let x = folioReader.isNight(readerConfig.nightTintColor, readerConfig.whiteTintColor)
+        
+        let mediaOverlayStyleColors = "\"\(x.hexString(false))\", \"\(x.highlightColor().hexString(false))\""
 
         // Inject CSS
         let jsFilePath = Bundle.frameworkBundle().path(forResource: "Bridge", ofType: "js")

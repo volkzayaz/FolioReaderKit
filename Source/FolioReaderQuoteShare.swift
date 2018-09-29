@@ -50,10 +50,10 @@ class FolioReaderQuoteShare: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.setCloseButton(withConfiguration: self.readerConfig)
+        self.setCloseButton(withColor: folioReader.isNight(readerConfig.nightTintColor, readerConfig.whiteTintColor))
         configureNavBar()
 
-        let titleAttrs = [NSAttributedStringKey.foregroundColor: self.readerConfig.tintColor]
+        let titleAttrs = [NSAttributedStringKey.foregroundColor: folioReader.isNight(readerConfig.nightTintColor, readerConfig.whiteTintColor)]
         let share = UIBarButtonItem(title: self.readerConfig.localizedShare, style: .plain, target: self, action: #selector(shareQuote(_:)))
         share.setTitleTextAttributes(titleAttrs, for: UIControlState())
         navigationItem.rightBarButtonItem = share
@@ -193,7 +193,7 @@ class FolioReaderQuoteShare: UIViewController {
 
     func configureNavBar() {
         let navBackground = self.folioReader.isNight(self.readerConfig.nightModeMenuBackground, UIColor.white)
-        let tintColor = self.readerConfig.tintColor
+        let tintColor = folioReader.isNight(readerConfig.nightTintColor, readerConfig.whiteTintColor)
         let navText = self.folioReader.isNight(UIColor.white, UIColor.black)
         let font = UIFont(name: "Avenir-Light", size: 17)!
         setTranslucentNavigation(false, color: navBackground, tintColor: tintColor, titleColor: navText, andFont: font)
@@ -352,7 +352,7 @@ extension FolioReaderQuoteShare: UICollectionViewDataSource {
         }
 
         if (selectedIndex == (indexPath as NSIndexPath).row) {
-            cell.contentView.layer.borderColor = self.readerConfig.tintColor.cgColor
+            cell.contentView.layer.borderColor = folioReader.isNight(readerConfig.nightTintColor, readerConfig.whiteTintColor).cgColor
             cell.contentView.layer.borderWidth = 3
         } else {
             cell.contentView.layer.borderColor = UIColor(white: 0.5, alpha: 0.2).cgColor

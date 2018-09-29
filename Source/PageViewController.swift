@@ -64,7 +64,7 @@ class PageViewController: UIPageViewController {
             }
         }
 
-        self.setCloseButton(withConfiguration: self.readerConfig)
+        self.setCloseButton(withColor: folioReader.isNight(readerConfig.nightTintColor, readerConfig.whiteTintColor))
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -74,7 +74,7 @@ class PageViewController: UIPageViewController {
 
     func configureNavBar() {
         let navBackground = self.folioReader.isNight(self.readerConfig.nightModeMenuBackground, UIColor.white)
-        let tintColor = self.readerConfig.tintColor
+        let tintColor = folioReader.isNight(readerConfig.nightTintColor, readerConfig.whiteTintColor)
         let navText = self.folioReader.isNight(UIColor.white, UIColor.black)
         let font = UIFont(name: "Avenir-Light", size: 17)!
         setTranslucentNavigation(false, color: navBackground, tintColor: tintColor, titleColor: navText, andFont: font)
