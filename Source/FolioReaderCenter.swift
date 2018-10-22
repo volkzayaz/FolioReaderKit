@@ -236,6 +236,13 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     fileprivate func updateSubviewFrames() {
         self.pageIndicatorView?.frame = self.frameForPageIndicatorView()
         self.scrollScrubber?.frame = self.frameForScrollScrubber()
+        
+        if #available(iOS 11.0, *) {
+            var frame = getScreenBounds()
+            frame.origin.y += view.safeAreaInsets.top
+            frame.size.height -= view.safeAreaInsets.bottom
+            collectionView.frame = frame
+        }
     }
 
     fileprivate func frameForPageIndicatorView() -> CGRect {
