@@ -30,7 +30,7 @@ class ViewController: UIViewController {
         config.shouldHideNavigationOnTap = epub.shouldHideNavigationOnTap
         config.scrollDirection = epub.scrollDirection
         config.allowSharing = false
-        config.tintColor = UIColor.red
+        config.whiteTintColor = UIColor.red
         config.enableTTS = false
         
         // See more at FolioReaderConfig.swift

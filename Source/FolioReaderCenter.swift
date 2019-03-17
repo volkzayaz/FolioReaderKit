@@ -200,6 +200,11 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         if let scrollScrubber = scrollScrubber {
             view.addSubview(scrollScrubber.slider)
         }
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+//            self.showBars()
+//        }
+        
     }
 
     override open func viewWillAppear(_ animated: Bool) {
@@ -284,7 +289,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         let menu = UIBarButtonItem(image: closeIcon, style: .plain, target: self, action:#selector(closeReader(_:)))
         let toc = UIBarButtonItem(image: tocIcon, style: .plain, target: self, action:#selector(presentChapterList(_:)))
 
-        navigationItem.leftBarButtonItems = [menu, toc]
+        navigationItem.leftBarButtonItems = [menu, /*toc*/]
 
         var rightBarIcons = [UIBarButtonItem]()
 
@@ -1455,6 +1460,8 @@ extension FolioReaderCenter: FolioReaderPageDelegate {
                 updateCurrentPage(page)
                 isFirstLoad = false
 
+                self.showBars()
+                
                 if (self.currentPageNumber == pageNumber && pageOffset > 0) {
                     page.scrollPageToOffset(pageOffset, animated: false)
                 }
@@ -1462,6 +1469,9 @@ extension FolioReaderCenter: FolioReaderPageDelegate {
                 page.scrollPageToBottom()
             }
         } else if isFirstLoad {
+            
+            self.showBars()
+            
             updateCurrentPage(page)
             isFirstLoad = false
         }
